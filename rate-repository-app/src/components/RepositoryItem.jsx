@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: 10,
     gap: 5,
+    flex: 1,
+    flexShrink: 1,
   },
   languageStyles: {
     backgroundColor: theme.colors.primary,

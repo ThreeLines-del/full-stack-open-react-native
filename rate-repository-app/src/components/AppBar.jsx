@@ -1,13 +1,15 @@
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import Text from "./Text";
 import Constants from "expo-constants";
-import theme from "../theme";
 import { Link } from "react-router-native";
+import { useApolloClient, useQuery } from "@apollo/client/react";
+import { CURRENT_USER } from "../graphql/queries";
+import useAuthStorage from "../hooks/useAuthStorage";
 
 const styles = StyleSheet.create({
   container: {
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: "violet",
+    backgroundColor: "#d7d3d35e",
     padding: "10",
     flexDirection: "row",
   },
@@ -19,6 +21,17 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
+  const authStorage = useAuthStorage();
+  const apolloClient = useApolloClient();
+
+  const { data } = useQuery(CURRENT_USER);
+  const currentUser = data?.me;
+
+  const signOut = () => {
+    authStorage.removeAccessToken();
+    apolloClient.resetStore();
+  };
+
   return (
     <Pressable>
       <View style={styles.container}>
@@ -29,11 +42,19 @@ const AppBar = () => {
             </Text>
           </Link>
 
-          <Link to={"/signin"}>
-            <Text fontSize={"heading"} fontWeight={"bold"}>
-              Sign in
-            </Text>
-          </Link>
+          {currentUser ? (
+            <Pressable onPress={signOut}>
+              <Text fontSize={"heading"} fontWeight={"bold"}>
+                Sign out
+              </Text>
+            </Pressable>
+          ) : (
+            <Link to={"/signin"}>
+              <Text fontSize={"heading"} fontWeight={"bold"}>
+                Sign in
+              </Text>
+            </Link>
+          )}
         </ScrollView>
       </View>
     </Pressable>
