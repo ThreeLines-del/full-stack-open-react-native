@@ -1,6 +1,8 @@
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import Text from "./Text";
 import theme from "../theme";
+import { formatCount } from "../utils/formatCount";
+import * as Linking from "expo-linking";
 
 const styles = StyleSheet.create({
   container: {
@@ -38,18 +40,21 @@ const styles = StyleSheet.create({
     color: "white",
     borderRadius: 2,
   },
+  buttonStyle: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: 50,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    marginTop: 5,
+    backgroundColor: theme.colors.primary,
+    borderRadius: 4,
+  },
 });
 
-const RepositoryItem = ({ repository }) => {
-  const formatCount = (count) => {
-    if (count >= 1000) {
-      return (count / 1000).toFixed(1).replace(/\.0$/, "") + "k";
-    }
-    return count.toString();
-  };
-
+const RepositoryItem = ({ repository, showButton }) => {
   return (
-    <View style={styles.container}>
+    <View testID="repositoryItem" style={styles.container}>
       <View style={styles.innerContainer}>
         <View style={styles.imageContainer}>
           <Image
@@ -91,6 +96,17 @@ const RepositoryItem = ({ repository }) => {
           <Text color={"textSecondary"}>Rating</Text>
         </View>
       </View>
+
+      {showButton && (
+        <Pressable
+          style={styles.buttonStyle}
+          onPress={() => Linking.openURL(repository.url)}
+        >
+          <Text fontWeight={"bold"} style={{ color: "white" }}>
+            Open in Github
+          </Text>
+        </Pressable>
+      )}
     </View>
   );
 };

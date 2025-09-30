@@ -43,17 +43,33 @@ const AppBar = () => {
           </Link>
 
           {currentUser ? (
+            <Link to={"/review"}>
+              <Text fontSize={"heading"} fontWeight={"bold"}>
+                Create a review
+              </Text>
+            </Link>
+          ) : null}
+
+          {currentUser ? (
             <Pressable onPress={signOut}>
               <Text fontSize={"heading"} fontWeight={"bold"}>
                 Sign out
               </Text>
             </Pressable>
           ) : (
-            <Link to={"/signin"}>
-              <Text fontSize={"heading"} fontWeight={"bold"}>
-                Sign in
-              </Text>
-            </Link>
+            <>
+              <Link to={"/signin"}>
+                <Text fontSize={"heading"} fontWeight={"bold"}>
+                  Sign in
+                </Text>
+              </Link>
+
+              <Link to={"/signup"}>
+                <Text fontSize={"heading"} fontWeight={"bold"}>
+                  Sign up
+                </Text>
+              </Link>
+            </>
           )}
         </ScrollView>
       </View>
