@@ -9,7 +9,7 @@ import useAuthStorage from "../hooks/useAuthStorage";
 const styles = StyleSheet.create({
   container: {
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: "#d7d3d35e",
+    backgroundColor: "white",
     padding: "10",
     flexDirection: "row",
   },
@@ -43,11 +43,19 @@ const AppBar = () => {
           </Link>
 
           {currentUser ? (
-            <Link to={"/review"}>
-              <Text fontSize={"heading"} fontWeight={"bold"}>
-                Create a review
-              </Text>
-            </Link>
+            <>
+              <Link to={"/review"}>
+                <Text fontSize={"heading"} fontWeight={"bold"}>
+                  Create a review
+                </Text>
+              </Link>
+
+              <Link to={"/myreviews"}>
+                <Text fontSize={"heading"} fontWeight={"bold"}>
+                  My reviews
+                </Text>
+              </Link>
+            </>
           ) : null}
 
           {currentUser ? (
