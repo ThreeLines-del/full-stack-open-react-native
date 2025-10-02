@@ -20,12 +20,30 @@ const ItemSeparator = () => <View style={styles.seperator} />;
 
 const RepositoryPage = () => {
   const { id } = useParams();
-  const { data, loading } = useQuery(SINGLE_REPO, {
-    variables: {
-      repositoryId: id,
-    },
+  const variables = {
+    repositoryId: id,
+    first: 5,
+  };
+  const { data, loading, fetchMore } = useQuery(SINGLE_REPO, {
+    variables: variables,
     fetchPolicy: "cache-and-network",
   });
+
+  const onEndReach = () => {
+    const canFetchMore =
+      !loading && data?.repository.reviews.pageInfo.hasNextPage;
+
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        after: data.repository.reviews.pageInfo.endCursor,
+        ...variables,
+      },
+    });
+  };
 
   const reviewNodes = data?.repository
     ? data.repository.reviews.edges.map((edge) => edge.node)
@@ -45,6 +63,8 @@ const RepositoryPage = () => {
         </View>
       )}
       ItemSeparatorComponent={ItemSeparator}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
     />
   );
 };

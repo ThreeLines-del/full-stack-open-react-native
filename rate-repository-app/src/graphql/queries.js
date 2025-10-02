@@ -5,11 +5,15 @@ export const GET_REPOSITORIES = gql`
     $orderBy: AllRepositoriesOrderBy
     $orderDirection: OrderDirection
     $searchKeyword: String
+    $first: Int
+    $after: String
   ) {
     repositories(
       orderBy: $orderBy
       orderDirection: $orderDirection
       searchKeyword: $searchKeyword
+      first: $first
+      after: $after
     ) {
       edges {
         node {
@@ -23,7 +27,15 @@ export const GET_REPOSITORIES = gql`
           ownerAvatarUrl
           stargazersCount
         }
+        cursor
       }
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
+      totalCount
     }
   }
 `;
@@ -53,7 +65,7 @@ export const CURRENT_USER = gql`
 `;
 
 export const SINGLE_REPO = gql`
-  query Repository($repositoryId: ID!) {
+  query Repository($repositoryId: ID!, $first: Int, $after: String) {
     repository(id: $repositoryId) {
       fullName
       description
@@ -65,7 +77,7 @@ export const SINGLE_REPO = gql`
       ownerAvatarUrl
       stargazersCount
       url
-      reviews {
+      reviews(first: $first, after: $after) {
         edges {
           node {
             id
@@ -77,7 +89,15 @@ export const SINGLE_REPO = gql`
               username
             }
           }
+          cursor
         }
+        pageInfo {
+          endCursor
+          hasNextPage
+          hasPreviousPage
+          startCursor
+        }
+        totalCount
       }
     }
   }
